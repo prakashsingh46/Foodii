@@ -33,3 +33,46 @@
 .place-order-right .cart-total button{
     margin-top: 30px;
 }
+
+.loading{
+    opacity:0.4;
+}
+
+
+/* Loading spinner */
+.place-order.loading {
+  position: relative;
+  opacity: 0.5;            /* reduce visibility */
+  pointer-events: none;    /* disable clicks while loading */
+}
+
+.loader-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.7); /* light overlay */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;    /* allow spinner to animate */
+  z-index: 10;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #ccc;
+  border-top-color: #4caf50;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 10px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
