@@ -1,7 +1,6 @@
 import React, { useContext, useState } from 'react'
 import './navbar.css'
 import { assets } from '../../assets/assets'
-import { Nav } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
 import { StoreContext } from '../../context/StoreContext'
 const Navbar = ({setShowLogin}) => {
