@@ -15,9 +15,6 @@ const port=process.env.PORT || 4000
 app.use(express.json())
 app.use(cors())
 
-// DB connection
-connectDB();
-
 // API end points
 app.use("/api/food", foodRouter);
 app.use("/api/user", userRouter);
@@ -30,6 +27,13 @@ app.use("/images", express.static('uploads'));
 app.get("/", (req, res)=>{
     res.send("API Working");
 })
-app.listen(port, ()=>{
-    console.log(`Server started on port no ${port}`);
-})
+connectDB()
+    .then(()=>{
+        app.listen(port, ()=>{
+            console.log(`Server started on port no ${port}`);
+        })
+    })
+    .catch((error)=>{
+        console.error("Failed to start server:", error.message);
+        process.exit(1);
+    })
