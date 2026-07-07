@@ -7,9 +7,9 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 //Placing order from frotend
 
 const placeOrder = async(req, res)=>{
-    console.log("payment api is called");
-    const frontend_url = "http://localhost:5173"
-
+    // console.log("payment api is called");
+        const frontend_url = process.env.FRONTEND_URL || "http://localhost:5173"
+    let payment=false;
     try {
         //creating new order
         const newOrder = new orderModel({
@@ -20,8 +20,7 @@ const placeOrder = async(req, res)=>{
         })
         // saving the order
         await newOrder.save();
-        //removing from cart after order
-        await userModel.findByIdAndUpdate(req.body.userId,{cartData:{}});
+        
 
         // creating stripe payment link(neccessary fo stripe payment)
         const line_items = req.body.items.map((item)=>({
@@ -57,17 +56,36 @@ const placeOrder = async(req, res)=>{
 
         //sending session url in respone on success
         res.json({success:true, session_url:session.url})
-        console.log("payment api is called");
+        payment=true
+        // console.log("payment api is called");
 
     } catch (error) {
         console.log(error);
         res.json({success:false, message:"Error in payment"} )
     }
+
+    if(payment){
+        //removing from cart after order
+        await userModel.findByIdAndUpdate(req.body.userId,{cartData:{}});
+    }
+    
 }
 
-// const f = (req, res)=>{
-//     console.log("prakash");
-//     res.send("prakash")
-// }
+const verifyOrder = async (req, res)=>{
+    const {orderId, success} = req.body;
+    try {
+        if(success=="true"){
+            await orderModel.findByIdAndUpdate(orderId, {payment:true});
+            res.json({success:true, message:"Paid"});
+        }
+        else{
+            await orderModel.findByIdAndDelete(orderId);
+            res.json({success:false, message:"Not Paid"})
+        }
+    } catch (error) {
+        console.log(error);
+        res.json({success:false, message:"Error"});
+    }
+}
 
-export {placeOrder}
+export {placeOrder, verifyOrder};

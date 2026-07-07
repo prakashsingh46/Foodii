@@ -9,7 +9,7 @@ import Orders from './pages/Orders/Orders.jsx'
 import { ToastContainer} from 'react-toastify';
 
 const App = () => {
-  const URL="http://localhost:4000";
+  const URL=import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
   return (
     <div>
       <ToastContainer />
